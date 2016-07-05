@@ -25,14 +25,14 @@ def test_sqlite():
     store['a'] = '1'
     store['b'] = '2'
     assert len(store) == 2
-    assert list(store) == ['a', 'b']
-    assert list(store.keys()) == ['a', 'b']
-    assert list(store.values()) == ['1', '2']
-    assert list(store.items()) == [('a', '1'), ('b', '2')]
+    assert list(store) == ['b', 'a']
+    assert list(store.keys()) == ['b', 'a']
+    assert list(store.values()) == ['2', '1']
+    assert list(store.items()) == [('b', '2'), ('a', '1')]
     store.prefix = 'a'
     store['a'] = '1'
     assert len(store) == 1
-    assert list(store.keys()) == ['a/a', ]
+    assert list(store.keys()) == ['a', ]
     store.prefix = ''
     assert len(store) == 3
     store.clear()

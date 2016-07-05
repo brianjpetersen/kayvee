@@ -16,6 +16,10 @@ class Store:
         self.path = path
         self.prefix = prefix
         self.sync = sync
+        # create base directory if not exists
+        if path != ':memory:':
+            directory = os.path.dirname(self.path)
+            os.makedirs(directory, exist_ok=True)
         # create database and setup table
         self.connection = apsw.Connection(self.path)
         self.cursor = self.connection.cursor()
@@ -99,7 +103,7 @@ class Store:
             query += ' ORDER BY key DESC'
         for (key, value, ) in self.cursor.execute(query, {'key': key}):
             yield key, value
-        
+    
     def between(self, after_key, before_key, inclusive_after=True, 
                 inclusive_before=True, ascending=True):
         after_key = posixpath.join(self.prefix, after_key)
@@ -129,7 +133,7 @@ class Store:
             return self[key]
         except KeyError:
             return default
-        
+    
     def update(self, other):
         for key, value in other.items():
             self[key] = value
@@ -180,8 +184,9 @@ class Store:
         query = 'SELECT key FROM kayvee'
         if self.prefix != '':
             query += " WHERE key LIKE '{}/%'".format(self.prefix)
+        query += ' ORDER BY key DESC'
         for (key, ) in self.cursor.execute(query):
-            yield key
+            yield key.lstrip(self.prefix).lstrip('/')
     
     def keys(self):
         for key in self:
@@ -191,6 +196,7 @@ class Store:
         query = 'SELECT value FROM kayvee'
         if self.prefix != '':
             query += " WHERE key LIKE '{}/%'".format(self.prefix)
+        query += ' ORDER BY key DESC'
         for (value, ) in self.cursor.execute(query):
             yield value
     
@@ -198,6 +204,7 @@ class Store:
         query = 'SELECT key, value FROM kayvee'
         if self.prefix != '':
             query += " WHERE key LIKE '{}/%'".format(self.prefix)
+        query += ' ORDER BY key DESC'
         for (key, value, ) in self.cursor.execute(query):
             yield key, value
     

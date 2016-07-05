@@ -27,7 +27,7 @@ class Store(collections.abc.MutableMapping):
         if prefix.endswith('/') == False:
             prefix = prefix + '/'
         self._prefix = prefix
-        
+    
     prefix = property(get_prefix, set_prefix)
     
     @staticmethod
@@ -80,7 +80,7 @@ class Store(collections.abc.MutableMapping):
             else:
                 raise
         return response
-
+    
     def __repr__(self):
         return '{}.{}({}, prefix={})'.format(
             self.__module__,
@@ -94,15 +94,15 @@ class Store(collections.abc.MutableMapping):
     
     def __iter__(self):
         for response in self.bucket.objects.filter(Prefix=self.prefix):
-            yield response.key
+            yield response.key.lstrip(self.prefix)
     
     def __getitem__(self, key):
         response = self.get_response(key)
         item = response['Body'].read()
         return item
-
+    
     def __setitem__(self, key, value):
         self.set(key, value)
-        
+    
     def __delitem__(self, key):
         self.delete(key)

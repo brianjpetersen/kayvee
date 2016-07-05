@@ -18,7 +18,7 @@ def test_aws():
     store.prefix = 'test'
     store['a'] = b'a'
     store['b'] = b'b'
-    assert list(store) == ['test/a', 'test/b']
+    assert list(store) == ['a', 'b']
 
 
 if __name__ == '__main__':

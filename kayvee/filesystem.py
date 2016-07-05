@@ -67,9 +67,8 @@ class Store(collections.abc.MutableMapping):
     
     def __iter__(self):
         path = os.path.join(self.directory, self.prefix)
-        for _, _, files in os.walk(path):
-            for file in files:
-                key = os.path.join(self.prefix, file)
+        for _, _, keys in os.walk(path):
+            for key in keys:
                 yield key
     
     def __getitem__(self, key):

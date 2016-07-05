@@ -23,11 +23,11 @@ def test_aws():
     store.prefix = 'test'
     store['a'] = b'a'
     store['b'] = b'b'
-    assert list(store) == ['test/a', 'test/b']
+    assert list(store) == ['a', 'b']
     assert 'a' in store
     assert 'b' in store
     del store['a']
-    assert list(store) == ['test/b', ]
+    assert list(store) == ['b', ]
     assert len(store) == 1
     store.clear()
     assert len(store) == 0
